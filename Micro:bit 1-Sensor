@@ -1,0 +1,29 @@
+def on_logo_pressed():
+    radio.send_number(0)
+    music.stop_all_sounds()
+    led.plot(0, 0)
+    basic.pause(1000)
+    led.unplot(0, 0)
+input.on_logo_event(TouchButtonEvent.PRESSED, on_logo_pressed)
+
+radio.set_group(254)
+Is_Active = False
+Magnetic_Starting_Strength = input.magnetic_force(Dimension.STRENGTH)
+Magnet_Strength_Min = Magnetic_Starting_Strength - 10
+Magnet_Strength_Max = Magnetic_Starting_Strength + 10
+
+def on_forever():
+    global Is_Active
+    if input.magnetic_force(Dimension.STRENGTH) < Magnet_Strength_Min or input.magnetic_force(Dimension.STRENGTH) > Magnet_Strength_Max:
+        if Is_Active == False:
+            led.plot(4, 0)
+            Is_Active = True
+            radio.send_number(1)
+            music.play(music.tone_playable(988, music.beat(BeatFraction.WHOLE)),
+                music.PlaybackMode.LOOPING_IN_BACKGROUND)
+    else:
+        music.stop_all_sounds()
+        led.unplot(4, 0)
+        Is_Active = False
+    basic.pause(100)
+basic.forever(on_forever)
