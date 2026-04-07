@@ -1,0 +1,6 @@
+def on_received_number(receivedNumber):
+    serial.write_line("" + str((receivedNumber)))
+radio.on_received_number(on_received_number)
+
+radio.set_group(254)
+serial.redirect_to_usb()
